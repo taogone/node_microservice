@@ -26,6 +26,14 @@ exports.onRequest = function(res, method, pathname, params, cb) {
 	}
 };
 
+/**
+ * 회원 등록 기능
+ * @param method    메서드
+ * @param pathname  URI
+ * @param params    입력 파라미터
+ * @param cb        콜백
+ */
+
 function register(method, pathname, params, cb) {
 	var response = {
 		key: params.key,
@@ -43,9 +51,9 @@ function register(method, pathname, params, cb) {
 		connection.query(
 			"insert into members(username, password) values('" +
 				params.username +
-				"',password('" +
+				"','" +
 				params.password +
-				"'));",
+				"');",
 			(error, results, fields) => {
 				if (error) {
 					response.errorcode = 1;
@@ -58,13 +66,21 @@ function register(method, pathname, params, cb) {
 	}
 }
 
+/**
+ * 회원 인증 기능
+ * @param method    메서드
+ * @param pathname  URI
+ * @param params    입력 파라미터
+ * @param cb        콜백
+ */
+
 function inquiry(method, pathname, params, cb) {
 	var response = {
 		key: params.key,
 		errorcode: 0,
 		errormessage: "success"
 	};
-	if (params.username == null || params.password == null) {
+	if (params.username == null) {
 		response.errorcode = 1;
 		response.errormessage = "invalid parameters";
 		cb(response);
@@ -72,11 +88,10 @@ function inquiry(method, pathname, params, cb) {
 		var connection = mysql.createConnection(conn);
 		connection.connect();
 		connection.query(
-			"select id from members where username = '" +
-				params.username +
-				"' and password = password('" +
-				params.password +
-				"'));",
+			"select id from members where username = '" + params.username + "';",
+			// "' and password = '" +
+			// params.password +
+			// "';",
 			(error, results, fields) => {
 				if (error) {
 					response.errorcode = 1;
@@ -90,6 +105,14 @@ function inquiry(method, pathname, params, cb) {
 		connection.end();
 	}
 }
+
+/**
+ * 회원 탈퇴 기능
+ * @param method    메서드
+ * @param pathname  URI
+ * @param params    입력 파라미터
+ * @param cb        콜백
+ */
 
 function unregister(method, pathname, params, cb) {
 	var response = {

@@ -6,6 +6,13 @@ const conn = {
 	database: "monolithic"
 };
 
+const redis = require("redis");
+redis.on(
+	"error " +
+		function(err) {
+			console.log("Redis Error " + err);
+		}
+);
 exports.onRequest = function(res, method, pathname, params, cb) {
 	// 메서드 별로 기능 분기
 	switch (method) {
@@ -34,20 +41,28 @@ function register(method, pathname, params, cb) {
 		response.errormessage = "invalid parameters";
 		cb(response);
 	} else {
-		var connection = mysql.createConnection(conn);
-		connection.connect();
-		connection.query(
-			"insert into purchase(userid, goodsid) values(?,?)",
-			[params.userid, params.goodsid],
-			(error, results, fields) => {
-				if (error) {
-					response.errorcode = 1;
-					response.errormessage = error;
-				}
+		redis.get(params.goodsid, (err, result) => {
+			if (err || result == null) {
+				response.errorcode = 1;
+				response.errormessage = "Redis failure";
 				cb(response);
+				return;
 			}
-		);
-		connection.end();
+			var connection = mysql.createConnection(conn);
+			connection.connect();
+			connection.query(
+				"insert into purchases(userid, goodsid) values(?,?)",
+				[params.userid, params.goodsid],
+				(error, results, fields) => {
+					if (error) {
+						response.errorcode = 1;
+						response.errormessage = error;
+					}
+					cb(response);
+				}
+			);
+			connection.end();
+		});
 	}
 }
 

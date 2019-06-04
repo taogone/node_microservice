@@ -1,0 +1,27 @@
+{
+  "name": "20190603_node_microservice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taogone/node_microservice.git"
+  },
+  "keywords": [
+    "ongoing",
+    "study"
+  ],
+  "author": "Young Ki Kim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taogone/node_microservice/issues"
+  },
+  "homepage": "https://github.com/taogone/node_microservice#readme",
+  "dependencies": {
+    "mysql": "^2.17.1",
+    "redis": "^2.8.0"
+  }
+}

@@ -1,9 +1,9 @@
 const http = require("http");
 const url = require("url");
 const querystring = require("querystring");
-const members = require("./monolithic_members.js");
-const goods = require("./monolithic_goods.js");
-const purchase = require("./monolithic_purchases.js");
+const members = require("./monolithic_members");
+const goods = require("./monolithic_goods");
+const purchases = require("./monolithic_purchases");
 
 // HTTP 서버 생성 및 응답 처리
 var server = http
@@ -26,7 +26,7 @@ var server = http
 				} else {
 					params = querystring.parse(body);
 				}
-				onRequest(res, method, pathname, uri.query);
+				onRequest(res, method, pathname, params);
 			});
 		} else {
 			// GET 또는 DELETE이면 query 정보를 읽음
@@ -49,8 +49,8 @@ function onRequest(res, method, pathname, params) {
 		case "/goods":
 			goods.onRequest(res, method, pathname, params, response);
 			break;
-		case "/purchase":
-			purchase.onRequest(res, method, pathname, params, response);
+		case "/purchases":
+			purchases.onRequest(res, method, pathname, params, response);
 			break;
 		default:
 			res.writeHead(404);

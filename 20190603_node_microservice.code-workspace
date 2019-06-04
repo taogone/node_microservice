@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "20190513-Node API",
+		"git.ignoreLimitWarning": true
+	},
+	"extensions": {
+		"recommendations": []
+	}
+}

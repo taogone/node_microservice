@@ -3,9 +3,14 @@ const conn = {
 	host: "localhost",
 	user: "micro",
 	password: "service",
-	database: "monolithic"
+	database: "monolithic",
+	multipleStatements: true
 };
 
+const redis = require("redis").createClient();
+redis.on("error", function(err) {
+	console.log("Redis Error " + err);
+});
 exports.onRequest = function(res, method, pathname, params, cb) {
 	// 메서드 별로 기능 분기
 	switch (method) {
@@ -28,8 +33,9 @@ exports.onRequest = function(res, method, pathname, params, cb) {
 
 function register(method, pathname, params, cb) {
 	var response = {
+		key: params.key,
 		errorcode: 0,
-		errormessage: "sucess"
+		errormessage: "success"
 	};
 	if (
 		params.name == null ||
@@ -44,12 +50,16 @@ function register(method, pathname, params, cb) {
 		var connection = mysql.createConnection(conn);
 		connection.connect();
 		connection.query(
-			"insert into goods(name, category, price, description') values(?,?,?,?)",
+			"insert into goods(name, category, price, description) values(?,?,?,?)",
 			[params.name, params.category, params.price, params.description],
-			(error, results, fileds) => {
+			(error, results, fields) => {
 				if (error) {
 					response.errorcode = 1;
 					response.errormessage = error;
+				} else {
+					// Redis에 상품 정보 저장
+					const id = results[1][0].id;
+					redis.set(id, JSON.stringify(params));
 				}
 				cb(response);
 			}
@@ -60,6 +70,7 @@ function register(method, pathname, params, cb) {
 
 function inquiry(method, pathname, params, cb) {
 	var response = {
+		key: params.key,
 		errorcode: 0,
 		errormessage: "success"
 	};
@@ -79,6 +90,7 @@ function inquiry(method, pathname, params, cb) {
 
 function unregister(method, pathname, params, cb) {
 	var response = {
+		key: params.key,
 		errorcode: 0,
 		errormessage: "success"
 	};

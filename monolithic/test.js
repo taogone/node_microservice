@@ -48,7 +48,7 @@ function goods(callback) {
 	}
 	function goods_delete(cb) {
 		options.method = "DELETE";
-		options.path = "/goods";
+		options.path = "/goods?id=1";
 		request(cb);
 	}
 }
@@ -65,13 +65,13 @@ function members(callback) {
 		options.path = "/members";
 		request(cb, {
 			username: "testuser",
-			password: "1234",
-			passwordConfirm: "1234"
+			password: "1234"
+			// passwordConfirm: "1234"
 		});
 	}
 	function members_get(cb) {
 		options.method = "GET";
-		options.path = "/members?username=testuser&password=1234";
+		options.path = "/members?username=testuser";
 		request(cb);
 	}
 	function members_delete(cb) {
