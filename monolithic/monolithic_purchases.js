@@ -6,13 +6,11 @@ const conn = {
 	database: "monolithic"
 };
 
-const redis = require("redis");
-redis.on(
-	"error " +
-		function(err) {
-			console.log("Redis Error " + err);
-		}
-);
+const redis = require("redis").createClient();
+redis.on("error", function(err) {
+	console.log("Redis Error " + err);
+});
+
 exports.onRequest = function(res, method, pathname, params, cb) {
 	// 메서드 별로 기능 분기
 	switch (method) {

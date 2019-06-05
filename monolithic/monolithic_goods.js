@@ -50,7 +50,7 @@ function register(method, pathname, params, cb) {
 		var connection = mysql.createConnection(conn);
 		connection.connect();
 		connection.query(
-			"insert into goods(name, category, price, description) values(?,?,?,?)",
+			"insert into goods(name, category, price, description) values(?,?,?,?); select LAST_INSERT_ID() as id;",
 			[params.name, params.category, params.price, params.description],
 			(error, results, fields) => {
 				if (error) {
@@ -108,6 +108,8 @@ function unregister(method, pathname, params, cb) {
 				if (error) {
 					response.errorcode = 1;
 					response.errormessage = error;
+				} else {
+					redis.del(params.id); // Redis에서 상품 정보 삭제
 				}
 				cb(response);
 			}

@@ -93,8 +93,8 @@ function purchases(callback) {
 		options.method = "POST";
 		options.path = "/purchases";
 		request(cb, {
-			userid: 1,
-			goodsid: 1
+			userid: 19,
+			goodsid: 19
 		});
 	}
 	function purchases_get(cb) {
